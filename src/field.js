@@ -1,9 +1,6 @@
 'use strict';
 
-const playBg = new Audio('sound/bg.mp3')
-const bugBg = new Audio('sound/bug_pull.mp3')
-const carrotBg = new Audio('sound/carrot_pull.mp3')
-const alertBg = new Audio('sound/alert.wav')
+import * as sound from './sound.js'
 
 export default
 class Field {
@@ -23,6 +20,7 @@ class Field {
     this.gameField.innerHTML = ''
     this._addItem('game__bug', this.bugCount)
     this._addItem('game__carrot', this.carrotCount)
+    sound.playBgm()
   }
 
   _addItem(className, count) {
@@ -43,29 +41,19 @@ class Field {
     }
   }
 
-  onClick(event) {
+  onClick = event => {
     const target = event.target
     if(target.matches('.game__carrot')) {
       target.remove()
-      playSound(carrotBg)
-      console.log(this.onItemClick)
+      sound.playCarrot()
       this.onItemClick && this.onItemClick('game__carrot')
     } else if(target.matches('.game__bug')) {
-      pauseSound(playBg)
-      playSound(bugBg)
-      playSound(alertBg)
+      sound.pauseBgm()
+      sound.playBug()
       this.onItemClick && this.onItemClick('game__bug')
     }
   }
 
-}
-
-function playSound(sound) {
-  sound.play()
-}
-
-function pauseSound(sound) {
-  sound.pause()
 }
 
 function randomNumber(max, min) {

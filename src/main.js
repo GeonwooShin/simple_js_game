@@ -2,16 +2,11 @@
 
 import PopUp from './popup.js'
 import Field from './field.js'
+import * as sound from './sound.js'
 
 const CARROT_COUNT = 10
 const BUG_COUNT = 10
 const GAME_DURATION = 10
-
-const playBg = new Audio('sound/bg.mp3')
-const winBg = new Audio('sound/game_win.mp3')
-const bugBg = new Audio('sound/bug_pull.mp3')
-const carrotBg = new Audio('sound/carrot_pull.mp3')
-const alertBg = new Audio('sound/alert.wav')
 
 const playBtn = document.querySelector('.game__playBtn')
 const carrotLeft = document.querySelector('.game__carrotLeft')
@@ -47,7 +42,7 @@ function onItemClick(item) {
       finishGame('you won!')
     }
   } else if(item === 'game__bug') {
-    finishGame('you lost!')
+      finishGame('you lost!')
   }
 }
 
@@ -76,6 +71,8 @@ function stopGame() {
   hidePlayBtn()
   gameBanner.showWithText('resume')
   stopGameTimer()
+  sound.playAlert()
+  sound.pauseBgm()
 }
 
 function replayGame() {
@@ -84,11 +81,19 @@ function replayGame() {
   showStopIcon()
   startGameTimer(remainingTimeSec)
   gameBanner.hide()
+  sound.playBgm()
 }
 
 function finishGame(text) {
+  if(text === 'you lost!') {
+    gameBanner.showWithText(text)
+    sound.playBug()
+  } else {
+    gameBanner.showWithText(text)
+    sound.pauseBgm()
+    sound.playWin()
+  }
   gameStatus = true
-  gameBanner.showWithText(text)
   stopGameTimer()
   hidePlayBtn()
   showPlayIcon()
@@ -150,5 +155,3 @@ function showPlayBtn() {
 function updateCarrotLeft() {
   carrotLeft.innerText = CARROT_COUNT - score
 }
-
-console.log(gameField)
