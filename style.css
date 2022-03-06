@@ -76,7 +76,7 @@ button {
   visibility: hidden;
 }
 
-.game__resultBox {
+.pop-up {
   position: absolute;
   top: 70%;
   right: 50%;
@@ -88,7 +88,7 @@ button {
   border-radius: 8px;
   visibility: hidden;
 }
-.replay__btn {
+.pop-up_btn {
   display: block;
   margin: auto;
   width: 50px;
@@ -99,7 +99,7 @@ button {
   border-radius: 8px;
 }
 
-.result__text {
+.pop-up_text {
   color: white;
   text-align: center;
 }

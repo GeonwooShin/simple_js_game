@@ -1,5 +1,7 @@
 'use strict';
 
+import PopUp from './popup.js'
+
 const CARROT_COUNT = 10
 const BUG_COUNT = 10
 const GAME_DURATION = 10
@@ -14,25 +16,25 @@ const gameFieldRect = gameField.getBoundingClientRect()
 const playBtn = document.querySelector('.game__playBtn')
 const carrotLeft = document.querySelector('.game__carrotLeft')
 const timeLeft = document.querySelector('.game__secBox')
-const popup = document.querySelector('.game__resultBox')
-const replayBtn = document.querySelector('.replay__btn')
 
 let gameStatus = false
 let score = 0
 let timer = undefined
 let remainingTimeSec
 
-playBtn.addEventListener('click', (event) => {
-  if(gameStatus) {
-    stopGame()
+const gameBanner = new PopUp()
+
+gameBanner.setClickListner(() => {
+  if(remainingTimeSec > 0 && gameStatus === false) {
+    replayGame()
   } else {
     startGame()
   }
 })
 
-replayBtn.addEventListener('click', () => {
-  if(remainingTimeSec > 0 && gameStatus === false) {
-    replayGame()
+playBtn.addEventListener('click', (event) => {
+  if(gameStatus) {
+    stopGame()
   } else {
     startGame()
   }
@@ -47,15 +49,15 @@ function startGame() {
   showStopIcon()
   showTimerAndScore()
   startGameTimer(GAME_DURATION)
-  hidePopup()
+  gameBanner.hide()
 }
 
 function stopGame() {
   gameStatus = false
   showPlayIcon()
-  showPopupWithText('resume')
-  stopGameTimer()
   hidePlayBtn()
+  gameBanner.showWithText('resume')
+  stopGameTimer()
 }
 
 function replayGame() {
@@ -63,12 +65,12 @@ function replayGame() {
   showPlayBtn()
   showStopIcon()
   startGameTimer(remainingTimeSec)
-  hidePopup()
+  gameBanner.hide()
 }
 
 function finishGame(text) {
   gameStatus = true
-  showPopupWithText(text)
+  gameBanner.showWithText(text)
   stopGameTimer()
   hidePlayBtn()
   showPlayIcon()
@@ -143,16 +145,6 @@ function updateTimerText(time) {
   const minutes = Math.floor(time / 60)
   const seconds = time % 60
   timeLeft.innerText = `${minutes}:${seconds}`
-}
-
-function showPopupWithText(text) {
-  popup.style.visibility = 'visible'
-  const popupText = document.querySelector('.result__text')
-  popupText.innerText = text
-}
-
-function hidePopup() {
-  popup.style.visibility = 'hidden'
 }
 
 function hidePlayBtn() {
