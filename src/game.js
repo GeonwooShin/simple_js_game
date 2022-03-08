@@ -4,6 +4,8 @@ import Field from './field.js'
 import PopUp from './popup.js'
 import * as sound from './sound.js'
 
+const gameBanner = new PopUp()
+
 export default class Game {
   constructor(gameDuration, carrotCount, bugCount) {
     this.gameDuration = gameDuration
@@ -16,7 +18,7 @@ export default class Game {
     this.gameStatus = false
     this.score = 0
     this.timer = undefined
-    this.remainingTimeSec
+    this.remainingTimeSec = gameDuration
 
     this.icon = document.querySelector('.fa-solid')
     this.playBtn = document.querySelector('.game__playBtn')
@@ -29,10 +31,6 @@ export default class Game {
         this.start()
       }
     })
-  }
-
-  setHideBanner(hideBanner) {
-    this.hideBanner = hideBanner
   }
 
   setStopListner(onGameStop) {
@@ -65,20 +63,20 @@ export default class Game {
   start() {
     this.gameStatus = true
     this.score = 0
+    this.remainingTimeSec = this.gameDuration
+    gameBanner.hide()
     this._init()
     this._showPlayBtn()
     this._showStopIcon()
     this._showTimerAndScore()
     this._startGameTimer(this.gameDuration)
-    this.setHideBanner && this.setHideBanner()
   }
 
   stop() {
     this.gameStatus = false
     this._showPlayIcon()
     this._hidePlayBtn()
-    // gameBanner.showWithText('resume')
-    this.onGameStop && this.onGameStop()
+    this.onGameStop && this.onGameStop('resume?')
     this._stopGameTimer()
     sound.playAlert()
     sound.pauseBgm()
@@ -86,10 +84,10 @@ export default class Game {
 
   replay() {
     this.gameStatus = true
+    gameBanner.hide()
     this._showPlayBtn()
     this._showStopIcon()
     this._startGameTimer(this.remainingTimeSec)
-    this.setHideBanner && this.setHideBanner()
     sound.playBgm()
   }
 
@@ -136,7 +134,6 @@ export default class Game {
   }
 
   _startGameTimer() {
-    this.remainingTimeSec = this.gameDuration
     this._updateTimerText(this.remainingTimeSec)
     this.timer = setInterval(() => {
       if(this.remainingTimeSec <= 0) {

@@ -14,9 +14,6 @@ gameBanner.setClickListner(() => {
 })
 
 const game = new Game(GAME_DURATION, CARROT_COUNT, BUG_COUNT)
-game.setHideBanner(() => {
-  gameBanner.hide()
-})
 game.setStopListner((message) => {
   gameBanner.showWithText(message)
 })
