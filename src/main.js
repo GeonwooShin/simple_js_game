@@ -1,7 +1,6 @@
 'use strict';
 
 import PopUp from './popup.js'
-import Field from './field.js'
 import Game from './game.js'
 
 const CARROT_COUNT = 10

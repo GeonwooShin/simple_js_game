@@ -1,10 +1,16 @@
 'use strict'
 
-import Field from './field.js'
+import { Field , ItemType } from './field.js'
 import PopUp from './popup.js'
 import * as sound from './sound.js'
 
 const gameBanner = new PopUp()
+
+const Reason = Object.freeze({
+  win: 'you won!',
+  lose: 'you lost!',
+  pause: 'resume?'
+})
 
 export default class Game {
   constructor(gameDuration, carrotCount, bugCount) {
@@ -49,14 +55,14 @@ export default class Game {
     if(!this.gameStatus) {
       return
     }
-    if(item === 'game__carrot') {
+    if(item === ItemType.carrot) {
       this.score++
       this._updateCarrotLeft()
       if(this.score === this.carrotCount) {
-        this.finish('you won!')
+        this.finish(Reason.win)
       }
-    } else if(item === 'game__bug') {
-        this.finish('you lost!')
+    } else if(item === ItemType.bug) {
+        this.finish(Reason.lose)
     }
   }
 
@@ -76,7 +82,7 @@ export default class Game {
     this.gameStatus = false
     this._showPlayIcon()
     this._hidePlayBtn()
-    this.onGameStop && this.onGameStop('resume?')
+    this.onGameStop && this.onGameStop(Reason.pause)
     this._stopGameTimer()
     sound.playAlert()
     sound.pauseBgm()
@@ -92,8 +98,9 @@ export default class Game {
   }
 
   finish(text) {
-    if(text === 'you lost!') {
+    if(text === Reason.lose) {
       this.onGameStop && this.onGameStop(text)
+      sound.pauseBgm()
       sound.playBug()
     } else {
       this.onGameStop && this.onGameStop(text)
@@ -138,7 +145,7 @@ export default class Game {
     this.timer = setInterval(() => {
       if(this.remainingTimeSec <= 0) {
         clearInterval(this.timer)
-        this.finish('you lost!')
+        this.finish(Reason.lose)
         return
       }
       this._updateTimerText(--this.remainingTimeSec)

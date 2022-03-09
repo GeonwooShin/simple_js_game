@@ -2,8 +2,12 @@
 
 import * as sound from './sound.js'
 
-export default
-class Field {
+export const ItemType = Object.freeze({
+  carrot: 'game__carrot',
+  bug: 'game__bug'
+})
+
+export class Field {
   constructor(carrotCount, bugCount) {
     this.carrotCount = carrotCount
     this.bugCount = bugCount
@@ -18,8 +22,8 @@ class Field {
 
   init() {
     this.gameField.innerHTML = ''
-    this._addItem('game__bug', this.bugCount)
-    this._addItem('game__carrot', this.carrotCount)
+    this._addItem(ItemType.bug, this.bugCount)
+    this._addItem(ItemType.carrot, this.carrotCount)
     sound.playBgm()
   }
 
@@ -46,11 +50,11 @@ class Field {
     if(target.matches('.game__carrot')) {
       target.remove()
       sound.playCarrot()
-      this.onItemClick && this.onItemClick('game__carrot')
+      this.onItemClick && this.onItemClick(ItemType.carrot)
     } else if(target.matches('.game__bug')) {
       sound.pauseBgm()
       sound.playBug()
-      this.onItemClick && this.onItemClick('game__bug')
+      this.onItemClick && this.onItemClick(ItemType.bug)
     }
   }
 
